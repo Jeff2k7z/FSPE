@@ -26,5 +26,15 @@ namespace FSPE.Controllers
 
             return View();
         }
+
+        public ActionResult Sponsor()
+        {
+            return View();
+        }
+
+        public ActionResult Donate()
+        {
+            return View();
+        }
     }
 }

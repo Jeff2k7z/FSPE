@@ -1,0 +1,39 @@
+﻿@model IEnumerable<FSPE.Models.Club>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Available Clubs</h2>
+
+@if (!Model.Any())
+{
+    <p>We don't currently have any clubs.</p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Sign Up</th>
+            <th>Club Name</th>
+            <th>Grades</th>
+            <th>Day(s)</th>
+            <th>Time</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var club in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink("Sign Up", "NewRegistration", "Club", new { id = club.Id }, null)</td>
+                    <td>@club.Name</td>
+                    <td>@club.Grades</td>
+                    <td>@club.Days</td>
+                    <td>@club.Time</td>
+                    <td>@club.Price.ToString("c")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
