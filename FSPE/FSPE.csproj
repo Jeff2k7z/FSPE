@@ -229,12 +229,16 @@
     <Compile Include="ViewModels\RegisterClubViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\about-us.jpg" />
     <Content Include="Content\bootstrap-lumen.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\contact-us.png" />
+    <Content Include="Content\donate.png" />
     <Content Include="Content\front_page_banner.jpg" />
     <Content Include="Content\logo.png" />
     <Content Include="Content\LogoColorTextRight.jpeg" />
+    <Content Include="Content\sponsor-us.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

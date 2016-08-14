@@ -3,6 +3,54 @@
     ViewBag.Title = "Index";
 }
 
+<style>
+    .clubcontainer {
+        height: 550px;
+        margin: 0 auto;
+        float: none;
+        display: block;
+        border: 5px solid;
+    }
+    .group {
+        float: left;
+        border: 1px solid #808080;
+        width: calc(100% / 4); 
+        text-align:center;
+    }
+
+    .groupheader {
+        background-color: darkseagreen;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        height: 32px;
+        text-align: center;
+
+    }
+
+    .club {
+        border-bottom: 1px solid #808080;
+    }
+
+    .club:hover {
+        background-color: lightgreen;
+    }
+
+    .clubheader {
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .label {
+        width: 50%;
+        text-align: right;
+        color: #808080;
+        font-size: 12px;
+        display: block;
+        float: left;
+        padding-right: 10px;
+    }
+</style>
 <h2>Available Clubs</h2>
 
 @if (!Model.Any())
@@ -11,43 +59,30 @@
 }
 else
 {
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Select</th>
-                <th>Club Name</th>
-                <th>Spots Remaining</th>
-                <th>Grades</th>
-                <th>Time</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var group in Model.GroupBy(club => club.Days))
+    <p style="font-size: 18px;">Registration is <b>NOT</b> currently open. We will begin taking signups on <b style="font-size:20px;">8/22/16</b>.  Please check back then.</p>
+    <p>Please review the 2016 Quarter 1 clubs below.</p>
+    <div class="clubcontainer">
+    @foreach (var group in Model.GroupBy(club => club.Days))
+    {
+        <div class="group">
+            <div class="groupheader">
+                @Html.Encode(group.Key)
+            </div>
+            @foreach (var club in group)
             {
-                <tr>
-                    <td colspan="6" style="background: darkseagreen; color: white;font-weight: bold" >
-                        @Html.Encode(group.Key)
-                    </td>
-                </tr>
+                <div class="club">
+                    <div class="clubheader">@club.Name</div>
+                    <div><span class="label">Spots Remaining: </span>@club.Capacity of @club.Capacity</div>
+                    <div><span class="label">Grades: </span>@club.Grades</div>
+                    <div><span class="label">Time: </span>@club.Time</div>
+                    <div><span class="label">Price: </span>@club.Price.ToString("c")</div>
 
 
-                foreach (var club in group)
-                {
-                    <tr>
-                        <td style="text-align: center">@Html.RadioButton(group.Key, club.Id)</td>
-                        <td>@club.Name</td>
-                        <td>@club.Capacity of @club.Capacity</td>
-                        <td>@club.Grades</td>
-                        <td>@club.Time</td>
-                        <td>@club.Price.ToString("c")</td>
-
-
-                    </tr>
-                }
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    }
+    </div>
 
     <script>
         (function ($) {

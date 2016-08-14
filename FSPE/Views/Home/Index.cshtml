@@ -13,16 +13,16 @@
         <p>
             The <b>Friends of San Pablo Elementary</b> is a Non-Profit organization that supports our school, faculty and students through private donations and community business support.
         </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        @Html.ActionLink("Learn more \u00BB", "About", "Home", new { @class="btn btn-default" })
     </div>
     <div class="col-md-4">
         <h2>After-School Clubs</h2>
         <p>Sign your child up for one of our fun and exiciting after school clubs.  From Soccer to Dance to Engineering, there's something for every child.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        @Html.ActionLink("Learn more \u00BB", "Index", "Club", null, new { @class = "btn btn-default" })
     </div>
     <div class="col-md-4">
         <h2>Support Us</h2>
         <p>Help us to make a difference in our kids lives by making a small donation. Every little bit helps!</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        @Html.ActionLink("Learn more \u00BB", "Donate", "Home", new { @class = "btn btn-default" })
     </div>
 </div>
