@@ -15,5 +15,6 @@ namespace FSPE.Models
         public string Time { get; set; }
         public string Grades { get; set; }
         public double Price { get; set; }
+        public int Capacity { get; set; }
     }
 }

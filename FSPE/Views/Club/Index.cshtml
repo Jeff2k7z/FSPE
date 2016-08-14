@@ -13,27 +13,62 @@ else
 {
     <table class="table table-bordered table-hover">
         <thead>
-        <tr>
-            <th>Sign Up</th>
-            <th>Club Name</th>
-            <th>Grades</th>
-            <th>Day(s)</th>
-            <th>Time</th>
-            <th>Price</th>
-        </tr>
+            <tr>
+                <th>Select</th>
+                <th>Club Name</th>
+                <th>Spots Remaining</th>
+                <th>Grades</th>
+                <th>Time</th>
+                <th>Price</th>
+            </tr>
         </thead>
         <tbody>
-            @foreach (var club in Model)
+            @foreach (var group in Model.GroupBy(club => club.Days))
             {
                 <tr>
-                    <td>@Html.ActionLink("Sign Up", "NewRegistration", "Club", new { id = club.Id }, null)</td>
-                    <td>@club.Name</td>
-                    <td>@club.Grades</td>
-                    <td>@club.Days</td>
-                    <td>@club.Time</td>
-                    <td>@club.Price.ToString("c")</td>
+                    <td colspan="6" style="background: darkseagreen; color: white;font-weight: bold" >
+                        @Html.Encode(group.Key)
+                    </td>
                 </tr>
+
+
+                foreach (var club in group)
+                {
+                    <tr>
+                        <td style="text-align: center">@Html.RadioButton(group.Key, club.Id)</td>
+                        <td>@club.Name</td>
+                        <td>@club.Capacity of @club.Capacity</td>
+                        <td>@club.Grades</td>
+                        <td>@club.Time</td>
+                        <td>@club.Price.ToString("c")</td>
+
+
+                    </tr>
+                }
             }
         </tbody>
     </table>
+
+    <script>
+        (function ($) {
+
+            $.fn.uncheckableRadio = function () {
+
+                return this.each(function () {
+                    $(this).mousedown(function () {
+                        $(this).data('wasChecked', this.checked);
+                    });
+
+                    $(this).click(function () {
+                        if ($(this).data('wasChecked'))
+                            this.checked = false;
+                    });
+                });
+
+            };
+
+        })(jQuery);
+
+        $('input[type=radio]').uncheckableRadio();
+    </script>
 }

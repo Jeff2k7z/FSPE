@@ -22,6 +22,7 @@ namespace FSPE.Controllers
         {
             var clubs = _context.Clubs.ToList();
 
+
             return View(clubs);
         }
 
