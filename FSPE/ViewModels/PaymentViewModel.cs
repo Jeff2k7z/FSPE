@@ -7,6 +7,6 @@ namespace FSPE.ViewModels
 {
     public class PaymentViewModel
     {
-        public float Total { get; set; }
+        public decimal Total { get; set; }
     }
 }

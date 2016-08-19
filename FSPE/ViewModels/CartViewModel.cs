@@ -8,7 +8,7 @@ namespace FSPE.ViewModels
 {
     public class CartViewModel
     {
-        public ClubRegistration ClubRegistration { get; set; }
-        public IEnumerable<ChildDisposition> ChildDispositions { get; set; }
+        public ClubRegistration registration { get; set; }
+        public Club club { get; set; }
     }
 }

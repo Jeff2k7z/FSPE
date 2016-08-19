@@ -42,6 +42,7 @@ namespace FSPE.Models
 
         public DateTime RegistrationDate { get; set; }
         public bool IsPaid { get; set; }
+        public string CouponCode { get; set; }
         
         public ChildDisposition ChildDisposition { get; set; }
         [Display(Name = "How will your child leave Club Activities?")]

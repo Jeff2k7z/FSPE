@@ -241,6 +241,10 @@
     <Compile Include="Migrations\201608191636444_AddRegistrationDateandIsPaidtoClubRegistrations.Designer.cs">
       <DependentUpon>201608191636444_AddRegistrationDateandIsPaidtoClubRegistrations.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608192013392_AddCouponCode.cs" />
+    <Compile Include="Migrations\201608192013392_AddCouponCode.Designer.cs">
+      <DependentUpon>201608192013392_AddCouponCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ChildDisposition.cs" />
@@ -333,6 +337,9 @@
     <Content Include="Views\Club\Cart.cshtml" />
     <Content Include="Views\Checkout\New.cshtml" />
     <Content Include="Views\Checkout\Show.cshtml" />
+    <Content Include="Views\Checkout\Cart.cshtml" />
+    <Content Include="Views\Home\Privacy.cshtml" />
+    <Content Include="Views\Home\Terms.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -370,6 +377,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608191636444_AddRegistrationDateandIsPaidtoClubRegistrations.resx">
       <DependentUpon>201608191636444_AddRegistrationDateandIsPaidtoClubRegistrations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608192013392_AddCouponCode.resx">
+      <DependentUpon>201608192013392_AddCouponCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

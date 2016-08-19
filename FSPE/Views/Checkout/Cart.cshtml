@@ -1,8 +1,10 @@
-﻿@model IEnumerable<FSPE.ViewModels.CartViewModel >
+﻿@model IEnumerable<FSPE.ViewModels.CartViewModel>
 @{
     ViewBag.Title = "Cart";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<h2>Cart</h2>
 
 <style>
     .clubcontainer {
@@ -10,16 +12,27 @@
         width: 80%;
         margin: 0 auto;
     }
+
+    .groupheader {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
     .clubname {
         width: 200px;
         display: block;
         float: left;
     }
+
     .clubgrades, .clubdays, .clubprice, .clubtime {
         width: 150px;
         float: left;
         display: block;
+    }
 
+    .actions {
+        width: 800px;
+        text-align: right;
     }
 </style>
 
@@ -35,7 +48,7 @@ else
         {
             <div class="group">
                 <div class="groupheader">
-                    Child: @Html.Encode(group.Key)
+                    @Html.Encode(group.Key)
                 </div>
                 @foreach (var club in group)
                 {
@@ -49,6 +62,12 @@ else
                 }
                 <div style="clear: both;"></div>
             </div>
+            <br />
         }
+        
+        <div class="actions">
+            @Html.ActionLink("Register Another Child", "Index", "Club", null, new { @class="btn btn-default"})
+            @Html.ActionLink("Pay Now", "New", "Checkout", null, new { @class= "btn btn-primary" })
+        </div>
     </div>
 }

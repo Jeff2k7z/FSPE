@@ -21,10 +21,12 @@ namespace FSPE.Controllers
         public ActionResult Index()
         {
             var locks = _context.RegistrationLocks
+                        .Where(rl => rl.LockExpiration > DateTime.Now)
                         .GroupBy(rl => rl.ClubID)
                         .Select(n => new { ClubId = n.Key, LockCount = n.Count() });
 
             var registrations = _context.ClubRegistrations
+                    .Where(cr => cr.IsPaid == true)
                     .GroupBy(cr => cr.ClubId)
                     .Select(n => new { ClubId = n.Key, RegistrationCount = n.Count() });
 
@@ -98,7 +100,7 @@ namespace FSPE.Controllers
             return View(viewModel);
         }
 
-        public ActionResult Cart(RegisterClubViewModel model)
+        public ActionResult Save(RegisterClubViewModel model)
         {
             // Read or create registration key
             string registrationKey = "";
@@ -141,10 +143,12 @@ namespace FSPE.Controllers
 
             _context.SaveChanges();
 
+            model.ClubRegistration.ChildName = "";
+            model.ClubRegistration.Grade = "";
+            model.ClubRegistration.Teacher = "";
+            Session["ChildInfo"] = model.ClubRegistration;
 
-            var viewModel = _context.ClubRegistrations.Where(cr => cr.RegistrationKey == registrationKey);
-
-            return View(viewModel);
+            return RedirectToAction("Cart", "Checkout");
         }
 
         public ActionResult Checkout()

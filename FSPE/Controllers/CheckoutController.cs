@@ -32,6 +32,29 @@ namespace FSPE.Controllers
 
         public ActionResult New(RegisterClubViewModel model)
         {
+            // Read or create registration key
+            string registrationKey = "";
+            if (this.ControllerContext.HttpContext.Request.Cookies.AllKeys.Contains("FOSPERegistrationKey"))
+            {
+                registrationKey = this.ControllerContext.HttpContext.Request.Cookies["FOSPERegistrationKey"].Value;
+            }
+            else
+            {
+                HttpCookie cookie = new HttpCookie("FOSPERegistrationKey");
+                registrationKey = Guid.NewGuid().ToString();
+                cookie.Value = registrationKey;
+                this.ControllerContext.HttpContext.Response.Cookies.Add(cookie);
+            }
+
+            var clubRegistrations = _context.ClubRegistrations.Where(cr => cr.RegistrationKey == registrationKey);
+            var clubs = _context.Clubs.ToList();
+
+            var total = (from cr in clubRegistrations
+                         join c in _context.Clubs on cr.ClubId equals c.Id
+                         select new
+                         {
+                             c.Price
+                         }).Sum(s => s.Price);
 
             var gateway = config.GetGateway();
             var clientToken = gateway.ClientToken.generate();
@@ -39,20 +62,44 @@ namespace FSPE.Controllers
 
             var viewModel = new PaymentViewModel
             {
-                Total = 29.95f
+                Total = (decimal)total
             };
 
             return View(viewModel);
         }
 
-        public ActionResult Create()
+        public ActionResult Create(string couponCode)
         {
             var gateway = config.GetGateway();
             Decimal amount;
 
+            // Read or create registration key
+            string registrationKey = "";
+            if (this.ControllerContext.HttpContext.Request.Cookies.AllKeys.Contains("FOSPERegistrationKey"))
+            {
+                registrationKey = this.ControllerContext.HttpContext.Request.Cookies["FOSPERegistrationKey"].Value;
+            }
+            else
+            {
+                HttpCookie cookie = new HttpCookie("FOSPERegistrationKey");
+                registrationKey = Guid.NewGuid().ToString();
+                cookie.Value = registrationKey;
+                this.ControllerContext.HttpContext.Response.Cookies.Add(cookie);
+            }
+
+            var clubRegistrations = _context.ClubRegistrations.Where(cr => cr.RegistrationKey == registrationKey);
+            var clubs = _context.Clubs.ToList();
+
+            var total = (from cr in clubRegistrations
+                         join c in _context.Clubs on cr.ClubId equals c.Id
+                         select new
+                         {
+                             c.Price
+                         }).Sum(s => s.Price);
+
             try
             {
-                amount = 29.95M;// Convert.ToDecimal(Request["amount"]);
+                amount = (decimal)total;// Convert.ToDecimal(Request["amount"]);
             }
             catch (FormatException e)
             {
@@ -134,6 +181,36 @@ namespace FSPE.Controllers
 
             ViewBag.Transaction = transaction;
             return View();
+        }
+
+        public ViewResult Cart()
+        {
+            // Read or create registration key
+            string registrationKey = "";
+            if (this.ControllerContext.HttpContext.Request.Cookies.AllKeys.Contains("FOSPERegistrationKey"))
+            {
+                registrationKey = this.ControllerContext.HttpContext.Request.Cookies["FOSPERegistrationKey"].Value;
+            }
+            else
+            {
+                HttpCookie cookie = new HttpCookie("FOSPERegistrationKey");
+                registrationKey = Guid.NewGuid().ToString();
+                cookie.Value = registrationKey;
+                this.ControllerContext.HttpContext.Response.Cookies.Add(cookie);
+            }
+
+            var clubRegistrations = _context.ClubRegistrations.Where(cr => cr.RegistrationKey == registrationKey);
+            var clubs = _context.Clubs.ToList();
+
+            var viewModel = from cr in clubRegistrations
+                            join c in _context.Clubs on cr.ClubId equals c.Id
+                            select new CartViewModel
+                            {
+                                registration = cr,
+                                club = c
+                            };
+
+            return View(viewModel);
         }
     }
 }

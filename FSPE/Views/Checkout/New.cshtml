@@ -4,6 +4,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .input-label {
+        font-size: 16px;
+    }
+
+    .amount-wrapper {
+        font-size: 16px;
+        font-weight: bold;
+        color: green;
+    }
+</style>
 <div class="wrapper">
     <div class="checkout container">
 
@@ -25,6 +36,12 @@
                     </div>
                 </label>
             </section>
+            <br />
+            <label for="couponCode">
+                Coupon Code:
+                <input type="text" name="couponCode" value="" />
+            </label>
+            <br />
             <button class="btn btn-primary" type="submit"><span>Make Payment</span></button>
         </form>
     </div>
