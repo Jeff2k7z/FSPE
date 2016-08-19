@@ -24,6 +24,7 @@ namespace FSPE.Models
         public DbSet<Club> Clubs  { get; set; }
         public DbSet<ClubRegistration> ClubRegistrations { get; set; }
         public DbSet<ChildDisposition> ChildDispositions { get; set; }
+        public DbSet<RegistrationLock> RegistrationLocks { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

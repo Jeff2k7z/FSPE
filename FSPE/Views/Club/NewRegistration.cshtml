@@ -1,30 +1,78 @@
 ﻿@model FSPE.ViewModels.RegisterClubViewModel
 @{
     ViewBag.Title = "NewRegistration";
+    Html.EnableClientValidation(true);
 }
 
 <h2>Register</h2>
 
-@using (Html.BeginForm("RegisterComplete", "Club"))
+<style>
+    #childinfo {
+        float: left;
+        width: 50%;
+    }
+
+    #parentinfo {
+        float: left;
+        width: 50%;
+    }
+
+    .registration {
+        height: auto;
+    }
+</style>
+@using (Html.BeginForm("Cart", "Club"))
 {
-    <div class="form-group">
-        @Html.LabelFor(m => m.ClubRegistration.ParentName)
-        @Html.TextBoxFor(m => m.ClubRegistration.ParentName, new { @class = "form-control" })
+    <div class="registration">
+        <div id="childinfo">
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClubRegistration.ChildName)
+                @Html.TextBoxFor(m => m.ClubRegistration.ChildName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ClubRegistration.ChildName)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClubRegistration.Grade)
+                @Html.TextBoxFor(m => m.ClubRegistration.Grade, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ClubRegistration.Grade)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClubRegistration.Teacher)
+                @Html.TextBoxFor(m => m.ClubRegistration.Teacher, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ClubRegistration.Teacher)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClubRegistration.ChildDispositionId)
+                @Html.DropDownListFor(m => m.ClubRegistration.ChildDispositionId, new SelectList(Model.ChildDispositions, "Id", "Name"), "Select One", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ClubRegistration.ChildDispositionId)
+            </div>
+        </div>
+        <div id="parentinfo">
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClubRegistration.ParentName)
+                @Html.TextBoxFor(m => m.ClubRegistration.ParentName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ClubRegistration.ParentName)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClubRegistration.EmailAddress)
+                @Html.TextBoxFor(m => m.ClubRegistration.EmailAddress, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ClubRegistration.EmailAddress)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ClubRegistration.PhoneNumber)
+                @Html.TextBoxFor(m => m.ClubRegistration.PhoneNumber, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ClubRegistration.PhoneNumber)
+            </div>
+        </div>
+        <div style="clear:both;">&nbsp;</div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ClubRegistration.EmailAddress)
-        @Html.TextBoxFor(m => m.ClubRegistration.EmailAddress, new {@class = "form-control"})
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ClubRegistration.PhoneNumber)
-        @Html.TextBoxFor(m => m.ClubRegistration.PhoneNumber, new { @class = "form-control" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ClubRegistration.ChildDispositionId)
-        @Html.DropDownListFor(m => m.ClubRegistration.ChildDispositionId, new SelectList(Model.ChildDispositions, "Id", "Name"), "Select One", new { @class = "form-control" })
-    </div>
+    
+    <div>
+        <input type="hidden" name="Clubs" value="@Model.Clubs" />
 
-    @Html.HiddenFor(m => m.ClubRegistration.Id)
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+}
 
-    <button type="submit" class="btn btn-primary">Register</button>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }

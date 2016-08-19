@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FSPE.Models.Club>
+﻿@model IEnumerable<FSPE.ViewModels.ClubSignupViewModel>
 @{
     ViewBag.Title = "Index";
 }
@@ -36,6 +36,10 @@
         background-color: lightgreen;
     }
 
+    .clubselected {
+        background-color: lightgreen;
+    }
+
     .clubheader {
         font-weight: bold;
         text-align: center;
@@ -70,9 +74,9 @@ else
             </div>
             @foreach (var club in group)
             {
-                <div class="club">
+                <div class="club" id="@club.Id">
                     <div class="clubheader">@club.Name</div>
-                    <div><span class="label">Spots Remaining: </span>@club.Capacity of @club.Capacity</div>
+                    <div><span class="label">Spots Remaining: </span>@club.Remaining of @club.Capacity</div>
                     <div><span class="label">Grades: </span>@club.Grades</div>
                     <div><span class="label">Time: </span>@club.Time</div>
                     <div><span class="label">Price: </span>@club.Price.ToString("c")</div>
@@ -84,26 +88,27 @@ else
     }
     </div>
 
+    using (Html.BeginForm("NewRegistration", "Club", FormMethod.Post, new { id = "registrationform" }))
+    {
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+        <input type="hidden" id="clubs" name="clubs" value="" />
+    }
+
     <script>
-        (function ($) {
+        $("div.club").click(function () {
+            
+            $(this).parent().find("div.clubselected").not(this).removeClass("clubselected");
+            $(this).toggleClass("clubselected");
+        });
 
-            $.fn.uncheckableRadio = function () {
+        $("#registrationform").submit(function () {
+            var arrayOfIds = $.map($("div.clubselected"), function (n, i) {
+                return n.id;
+            });
+            $("#clubs").val(arrayOfIds.splice(","));
+            //alert(arrayOfIds);
 
-                return this.each(function () {
-                    $(this).mousedown(function () {
-                        $(this).data('wasChecked', this.checked);
-                    });
-
-                    $(this).click(function () {
-                        if ($(this).data('wasChecked'))
-                            this.checked = false;
-                    });
-                });
-
-            };
-
-        })(jQuery);
-
-        $('input[type=radio]').uncheckableRadio();
+            //return false;
+        });
     </script>
 }

@@ -1,0 +1,39 @@
+﻿@model FSPE.ViewModels.PaymentViewModel
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="wrapper">
+    <div class="checkout container">
+
+        <header>
+            <h1>Checkout</h1>
+            <p>
+                Please make a payment with PayPal or credit card
+            </p>
+        </header>
+        <form id="payment-form" method="post" action="/checkout/create">
+            <section>
+                <div class="bt-drop-in-wrapper">
+                    <div id="bt-dropin"></div>
+                </div>
+                <label for="amount">
+                    <span class="input-label">Total Charge:</span>
+                    <div class="input-wrapper amount-wrapper">
+                        @Model.Total.ToString("c")
+                    </div>
+                </label>
+            </section>
+            <button class="btn btn-primary" type="submit"><span>Make Payment</span></button>
+        </form>
+    </div>
+</div>
+<script src="https://js.braintreegateway.com/js/braintree-2.27.0.min.js"></script>
+<script>
+  var client_token = "@ViewBag.ClientToken";
+  braintree.setup(client_token, "dropin", {
+    container: "bt-dropin"
+  });
+</script>
+
