@@ -4,7 +4,7 @@
     Html.EnableClientValidation(true);
 }
 
-<h2>Register</h2>
+<h2>Child Information</h2>
 
 <style>
     #childinfo {
@@ -17,10 +17,23 @@
         width: 50%;
     }
 
+    #parentinfo .form-group {
+        float:right;
+        clear:both;
+        width: 300px;
+    }
+
     .registration {
         height: auto;
+        width: 650px;
+    }
+
+    #submitbtn {
+        float: right;
     }
 </style>
+
+<p style="font-size:18px">Please enter contact information for you and your child and then click NEXT.</p>
 @using (Html.BeginForm("Save", "Club"))
 {
     <div class="registration">
@@ -59,20 +72,22 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.ClubRegistration.PhoneNumber)
-                @Html.TextBoxFor(m => m.ClubRegistration.PhoneNumber, new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.ClubRegistration.PhoneNumber, new { @class = "form-control", mask = "(999) 999-9999" })
                 @Html.ValidationMessageFor(m => m.ClubRegistration.PhoneNumber)
             </div>
         </div>
         <div style="clear:both;">&nbsp;</div>
     </div>
     
-    <div>
+    <div style="width:650px;">
         <input type="hidden" name="Clubs" value="@Model.Clubs" />
 
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button id="submitbtn" type="submit" class="btn btn-primary">Next &#187;</button>
+        <div style="clear:both"></div>
     </div>
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerymask")
 }

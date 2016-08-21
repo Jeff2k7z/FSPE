@@ -32,13 +32,21 @@
 
     .actions {
         width: 800px;
+    }
+    .actions-left {
+        float: left;
+    }
+    .actions-right {
+        float:right;
         text-align: right;
     }
 </style>
 
 @if (!Model.Any())
 {
-    <p>We don't currently have any clubs.</p>
+    <p>Your shopping cart is empty.</p>
+    <br />
+    @Html.ActionLink("Return to Club Selection", "Index", "Club", null, new { @class="btn btn-primary"})
 }
 else
 {
@@ -66,8 +74,14 @@ else
         }
         
         <div class="actions">
-            @Html.ActionLink("Register Another Child", "Index", "Club", null, new { @class="btn btn-default"})
-            @Html.ActionLink("Pay Now", "New", "Checkout", null, new { @class= "btn btn-primary" })
+            <div class="actions-left">
+                @Html.ActionLink("Clear Cart", "ClearCart", "Checkout", null, new { @class = "btn btn-default" })
+            </div>
+            <div class="actions-right">
+                @Html.ActionLink("Register Another Child", "Index", "Club", null, new { @class="btn btn-default"})
+                @Html.ActionLink("Pay Now", "New", "Checkout", null, new { @class= "btn btn-primary" })
+            </div>
+            <div style="clear:both"></div>
         </div>
     </div>
 }

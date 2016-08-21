@@ -11,11 +11,12 @@
         display: block;
         border: 5px solid;
     }
+
     .group {
         float: left;
         border: 1px solid #808080;
-        width: calc(100% / 4); 
-        text-align:center;
+        width: calc(100% / 4);
+        text-align: center;
     }
 
     .groupheader {
@@ -25,15 +26,40 @@
         color: white;
         height: 32px;
         text-align: center;
-
     }
 
     .club {
         border-bottom: 1px solid #808080;
     }
 
+    .club .overlay {
+        display: none;
+    }
+
     .club:hover {
         background-color: lightgreen;
+    }
+
+    .clubclosed {
+        background-color: #e0e0e0;
+        border-bottom: 1px solid #808080;
+    }
+
+    .clubclosed .overlay { 
+        position: absolute;
+        text-align: center;
+        margin-top: -75px;
+        margin-left: 90px;
+        opacity: 0.7;
+    }
+
+    .clubclosed .overlay img {
+        width: 100px;
+    }
+
+    .clubclosed:hover .overlay {
+        opacity: 0.7;
+
     }
 
     .clubselected {
@@ -54,6 +80,12 @@
         float: left;
         padding-right: 10px;
     }
+
+    #registerbtn {
+        float: right;
+    }
+
+
 </style>
 <h2>Available Clubs</h2>
 
@@ -63,52 +95,80 @@
 }
 else
 {
-    <p style="font-size: 18px;">Registration is <b>NOT</b> currently open. We will begin taking signups on <b style="font-size:20px;">8/22/16</b>.  Please check back then.</p>
-    <p>Please review the 2016 Quarter 1 clubs below.</p>
-    <div class="clubcontainer">
-    @foreach (var group in Model.GroupBy(club => club.Days))
+    if (DateTime.Now < new DateTime(2016, 8, 21, 9, 0, 0))
     {
-        <div class="group">
-            <div class="groupheader">
-                @Html.Encode(group.Key)
-            </div>
-            @foreach (var club in group)
-            {
-                <div class="club" id="@club.Id">
+        <p style="font-size: 18px;">Registration is <b>NOT</b> currently open. We will begin taking signups on <b style="font-size:20px;">8/22/16</b>.  Please check back then.</p>
+        <p>Please review the 2016 Quarter 1 clubs below.</p>
+    }
+    else
+    {
+        <p style="font-size: 18px;">Registration is OPEN. Please select the clubs you'd like your child to attend and then click the REGISTER button.  <b>Make your selections for one child.</b>  If you have multiple children, you will be given the option to register them after signing up the first child.</p>
+
+        if (TempData["Flash"] != null)
+        {
+            <p style="font-size: 18px;color:red;">@TempData["Flash"]</p>
+        }
+    }
+    <div class="clubcontainer">
+        @foreach (var group in Model.GroupBy(club => club.Days))
+        {
+            <div class="group">
+                <div class="groupheader">
+                    @Html.Encode(group.Key)
+                </div>
+                @foreach (var club in group)
+                {
+                   var className = "club";
+                    if (club.Remaining <= 0) {
+                        className += "closed";
+                    }
+                <div class="@className" id="@club.Id">
                     <div class="clubheader">@club.Name</div>
                     <div><span class="label">Spots Remaining: </span>@club.Remaining of @club.Capacity</div>
                     <div><span class="label">Grades: </span>@club.Grades</div>
                     <div><span class="label">Time: </span>@club.Time</div>
                     <div><span class="label">Price: </span>@club.Price.ToString("c")</div>
-
+                    <div class="overlay">
+                        <img src="~/Content/full.png" />
+                    </div>
 
                 </div>
             }
-        </div>
+            </div>
     }
     </div>
 
-    using (Html.BeginForm("NewRegistration", "Club", FormMethod.Post, new { id = "registrationform" }))
+    if (DateTime.Now >= new DateTime(2016, 8, 21, 9, 0, 0))
     {
-        <button type="submit" class="btn btn-primary">Sign Up</button>
-        <input type="hidden" id="clubs" name="clubs" value="" />
-    }
+    <br />
+        using (Html.BeginForm("NewRegistration", "Club", FormMethod.Post, new { id = "registrationform" }))
+        {
+        <button id="registerbtn" type="submit" class="btn btn-primary">Register</button>
+            <input type="hidden" id="clubs" name="clubs" value="" />
+            <div style="clear:both"></div>
+        }
 
-    <script>
-        $("div.club").click(function () {
-            
-            $(this).parent().find("div.clubselected").not(this).removeClass("clubselected");
-            $(this).toggleClass("clubselected");
-        });
+        <script>
+            $("div.club").click(function () {
 
-        $("#registrationform").submit(function () {
-            var arrayOfIds = $.map($("div.clubselected"), function (n, i) {
-                return n.id;
+                $(this).parent().find("div.clubselected").not(this).removeClass("clubselected");
+                $(this).toggleClass("clubselected");
             });
-            $("#clubs").val(arrayOfIds.splice(","));
-            //alert(arrayOfIds);
 
-            //return false;
-        });
-    </script>
-}
+            $("#registrationform").submit(function () {
+                var arrayOfIds = $.map($("div.clubselected"), function (n, i) {
+                    return n.id;
+                });
+
+                var clubs = arrayOfIds.splice(",");
+
+                if (clubs == "") {
+                    alert("Please select at least one club.");
+                    return false;
+                }
+
+                $("#clubs").val(clubs);
+            });
+        </script>
+     }
+    }

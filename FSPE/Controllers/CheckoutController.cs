@@ -108,10 +108,16 @@ namespace FSPE.Controllers
             }
 
             var nonce = Request["payment_method_nonce"];
+            
             var request = new TransactionRequest
             {
                 Amount = amount,
-                PaymentMethodNonce = nonce
+                PaymentMethodNonce = nonce,
+                Options = new TransactionOptionsRequest
+                {
+                    SubmitForSettlement = true
+                }
+                
             };
 
             Result<Transaction> result = gateway.Transaction.Sale(request);
@@ -122,7 +128,9 @@ namespace FSPE.Controllers
             }
             else if (result.Transaction != null)
             {
-                return RedirectToAction("Show", new { id = result.Transaction.Id });
+                // This happens for AVS and other "Gateway" rejections
+                TempData["Flash"] = "Error";
+                return RedirectToAction("New");
             }
             else
             {
@@ -143,26 +151,26 @@ namespace FSPE.Controllers
         {
             var gateway = config.GetGateway();
             Transaction transaction = gateway.Transaction.Find(id);
-
+            
             if (transactionSuccessStatuses.Contains(transaction.Status))
             {
-                string registrationKey = this.ControllerContext.HttpContext.Request.Cookies["FOSPERegistrationKey"].Value;
+                var cookie = this.ControllerContext.HttpContext.Request.Cookies["FOSPERegistrationKey"];
 
-                // Update the club registrations to show paid
-                _context.ClubRegistrations
-                    .Where(cr => cr.RegistrationKey == registrationKey)
-                    .ToList()
-                    .ForEach(cr => cr.IsPaid = true);
+                if (cookie != null) {
+                    var registrationKey = cookie.Value;
 
-                // Remove the locks associated with these registrations
-                _context.RegistrationLocks.RemoveRange(_context.RegistrationLocks.Where(x => x.LockKey == registrationKey));
+                    // Update the club registrations to show paid
+                    _context.ClubRegistrations
+                        .Where(cr => cr.RegistrationKey == registrationKey)
+                        .ToList()
+                        .ForEach(cr => cr.IsPaid = true);
+                    
 
-                _context.SaveChanges();
+                    // Remove the locks associated with these registrations
+                    _context.RegistrationLocks.RemoveRange(_context.RegistrationLocks.Where(x => x.LockKey == registrationKey));
 
-                // Remove the registration cookies
-                if (this.ControllerContext.HttpContext.Request.Cookies.AllKeys.Contains("FOSPERegistrationKey"))
-                {
-                    HttpCookie cookie = this.ControllerContext.HttpContext.Request.Cookies["FOSPERegistrationKey"];
+                    _context.SaveChanges();
+                
                     cookie.Expires = DateTime.Now.AddDays(-1);
                     this.ControllerContext.HttpContext.Response.Cookies.Add(cookie);
                 }
@@ -170,13 +178,14 @@ namespace FSPE.Controllers
 
                 TempData["header"] = "Sweet Success!";
                 TempData["icon"] = "success";
-                TempData["message"] = "Your test transaction has been successfully processed. See the Braintree API response and try again.";
+                TempData["message"] = "Your payment has been successfully processed. Thanks for signing up for our clubs!";
             }
             else
             {
-                TempData["header"] = "Transaction Failed";
+                TempData["header"] = "There was a problem processing your payment.";
                 TempData["icon"] = "fail";
                 TempData["message"] = "Your test transaction has a status of " + transaction.Status + ". See the Braintree API response and try again.";
+                //TempData["message"] = "Please try again.";
             };
 
             ViewBag.Transaction = transaction;
@@ -211,6 +220,62 @@ namespace FSPE.Controllers
                             };
 
             return View(viewModel);
+        }
+
+        public RedirectToRouteResult ClearCart()
+        {
+            // Read or create registration key
+            string registrationKey = this.ControllerContext.HttpContext.Request.Cookies["FOSPERegistrationKey"].Value;
+
+            _context.ClubRegistrations.RemoveRange(_context.ClubRegistrations.Where(x => x.RegistrationKey == registrationKey));
+            _context.RegistrationLocks.RemoveRange(_context.RegistrationLocks.Where(x => x.LockKey == registrationKey));
+            _context.SaveChanges();
+
+            return RedirectToAction("Cart", "Checkout");
+        } 
+
+        public ViewResult Coupon(string couponCode)
+        {
+            if (couponCode == "SPEFAC")
+            {
+                var cookie = this.ControllerContext.HttpContext.Request.Cookies["FOSPERegistrationKey"];
+
+                if (cookie != null)
+                {
+                    var registrationKey = cookie.Value;
+
+                    // Update the club registrations to show paid
+                    _context.ClubRegistrations
+                        .Where(cr => cr.RegistrationKey == registrationKey)
+                        .ToList()
+                        .ForEach(cr => cr.IsPaid = true);
+
+                    // Update the coupon code
+                    if (!string.IsNullOrWhiteSpace(couponCode))
+                    {
+                        _context.ClubRegistrations
+                            .Where(cr => cr.RegistrationKey == registrationKey)
+                            .ToList()
+                            .ForEach(cr => cr.CouponCode = couponCode);
+                    }
+
+                    // Remove the locks associated with these registrations
+                    _context.RegistrationLocks.RemoveRange(_context.RegistrationLocks.Where(x => x.LockKey == registrationKey));
+
+                    _context.SaveChanges();
+
+                    cookie.Expires = DateTime.Now.AddDays(-1);
+                    this.ControllerContext.HttpContext.Response.Cookies.Add(cookie);
+                }
+
+
+                TempData["header"] = "Sweet Success!";
+                TempData["icon"] = "success";
+                TempData["message"] = "Your payment has been successfully processed. Thanks for signing up for our clubs!";
+            }
+
+            
+            return View("~/Views/Checkout/Show.cshtml");
         }
     }
 }

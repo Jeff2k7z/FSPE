@@ -23,6 +23,7 @@ namespace FSPE.Models
 
         [Display(Name = "Contact Phone Number")]
         [Required(ErrorMessage = "Phone Number is required")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:###-##-####}")]
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Child Name")]
