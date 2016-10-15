@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Web;
 using System.Web.Mvc;
 using FSPE.Models;
@@ -147,6 +148,7 @@ namespace FSPE.Controllers
                     ParentName = model.ClubRegistration.ParentName,
                     PhoneNumber = model.ClubRegistration.PhoneNumber,
                     RegistrationDate = DateTime.Now,
+                    ElectronicSignature = model.ClubRegistration.ElectronicSignature,
                     Teacher = model.ClubRegistration.Teacher,
                     IsPaid = false,
                     ChildDispositionId = model.ClubRegistration.ChildDispositionId
@@ -162,6 +164,7 @@ namespace FSPE.Controllers
             model.ClubRegistration.ChildName = "";
             model.ClubRegistration.Grade = "";
             model.ClubRegistration.Teacher = "";
+            model.ClubRegistration.ElectronicSignature = false;
             Session["ChildInfo"] = model.ClubRegistration;
 
             return RedirectToAction("Cart", "Checkout");
@@ -214,6 +217,23 @@ namespace FSPE.Controllers
             }
 
             return true;
+        }
+
+        public ViewResult Report()
+        {
+            var childdispositions = _context.ChildDispositions.ToList();
+
+            var viewModel = from cr in _context.ClubRegistrations.Where(cr => cr.IsPaid == true)
+                            join c in _context.Clubs on cr.ClubId equals c.Id
+                            join cd in _context.ChildDispositions on cr.ChildDispositionId equals cd.Id
+                            orderby cr.RegistrationDate descending
+                            select new CartViewModel
+                            {
+                                registration = cr,
+                                club = c,
+                                childdisposition = cd
+                            };
+            return View(viewModel);
         }
     }
 }

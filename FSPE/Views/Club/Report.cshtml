@@ -1,0 +1,105 @@
+﻿@model IEnumerable<FSPE.ViewModels.CartViewModel>
+@{
+    ViewBag.Title = "Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Report</h2>
+
+<style>
+    .clubcontainer {
+        font-size: 16px;
+        width: 100%;
+        margin: 0 auto;
+        white-space: nowrap;
+    }
+
+    .groupheader {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .clubname {
+        width: 7.5%;
+        display: block;
+        float: left;
+        white-space: nowrap;
+    }
+
+    .clubgrades, .clubdays, .clubprice, .clubtime {
+        width: 7.5%;
+        float: left;
+        display: block;
+        white-space: nowrap;
+    }
+
+    .clubprice {
+        text-align: right;
+    }
+
+    .actions {
+        width: 100%;
+    }
+
+    .actions-left {
+        float: left;
+    }
+
+    .actions-right {
+        float: right;
+        text-align: right;
+    }
+</style>
+
+@if (!Model.Any())
+{
+    <p>There are no Club Reservations.</p>
+}
+else
+{
+    <div class="clubcontainer">
+        <table class="table">
+            <tr>
+
+                <th>Registration Date</th>
+                <th>Parent Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Child</th>
+                <th>Teacher</th>
+                <th>Grade</th>
+                <th>Dismissal</th>
+                <th>Club</th>
+                <th>Day</th>
+                <th>Grades</th>
+                <th>Time</th>
+                <th>IsPaid</th>
+                <th>Coupon</th>
+                <th>Price</th>
+            </tr>
+        @foreach (var club in Model)
+        {
+
+            <tr>
+                
+                <td>@club.registration.RegistrationDate.ToString()</td>
+                <td>@club.registration.ParentName</td>
+                <td>@club.registration.EmailAddress</td>
+                <td>@club.registration.PhoneNumber</td>
+                <td>@club.registration.ChildName</td>
+                <td>@club.registration.Teacher</td>
+                <td>@club.registration.Grade</td>
+                <td>@club.childdisposition.Name</td>
+                <td>@club.club.Days</td>
+                <td>@club.club.Name</td>
+                <td>@club.club.Grades</td>
+                <td>@club.club.Time</td>
+                <td>@club.registration.IsPaid</td>
+                <td>@club.registration.CouponCode</td>
+                <td>@club.club.Price.ToString("c")</td>
+            </tr>
+        }
+        </table>
+    </div>
+}
+

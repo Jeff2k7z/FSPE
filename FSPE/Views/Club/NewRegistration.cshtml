@@ -7,29 +7,71 @@
 <h2>Child Information</h2>
 
 <style>
+    /* Mobile first queries*/
     #childinfo {
-        float: left;
-        width: 50%;
-    }
+            float: none;
+            width: 100%;
+        }
 
-    #parentinfo {
-        float: left;
-        width: 50%;
-    }
+        #parentinfo {
+            float: none;
+            width: 100%;
+        }
 
-    #parentinfo .form-group {
-        float:right;
-        clear:both;
-        width: 300px;
-    }
+        #parentinfo .form-group {
+        }
 
-    .registration {
-        height: auto;
-        width: 650px;
-    }
+        .registration {
+            height: auto;
+            width: 100%;
+        }
 
-    #submitbtn {
-        float: right;
+        #submitbtn {
+            float: right;
+        }
+
+        .terms {
+            width: 100%;
+        }
+
+        .actions {
+            width: 100%;
+        }
+
+    /* Larger than mobile */
+    @@media (min-width: 400px) {
+        #childinfo {
+            float: left;
+            width: 50%;
+        }
+
+        #parentinfo {
+            float: left;
+            width: 50%;
+        }
+
+            #parentinfo .form-group {
+                float: right;
+                clear: both;
+                width: 300px;
+            }
+
+        .registration {
+            height: auto;
+            width: 650px;
+        }
+
+        #submitbtn {
+            float: right;
+        }
+
+        .terms {
+            width: 650px;
+        }
+
+        .actions {
+            width: 650px;
+        }
     }
 </style>
 
@@ -78,16 +120,27 @@
         </div>
         <div style="clear:both;">&nbsp;</div>
     </div>
-    
-    <div style="width:650px;">
+    <div class="terms">
+        <p style="font-weight:bold;font-size:18px;">Parent Release Agreement</p>
+        <p>By clicking the "I Agree" checkbox below, you agree to release and discharge the Friends of San Pablo group,  Duval County School Board, its officers, agents and employees, exercising reasonable care within their scope of employment, from liability growing out of personal injuries and property damage resulting or occurring during the activities selected for registration.</p>
+    </div>
+    <div class="actions">
         <input type="hidden" name="Clubs" value="@Model.Clubs" />
-
+        <div class="checkbox">
+            <label>
+                @Html.CheckBoxFor(m => m.ClubRegistration.ElectronicSignature) I Agree
+                @Html.ValidationMessageFor(m => m.ClubRegistration.ElectronicSignature )
+            </label>
+        </div>
         <button id="submitbtn" type="submit" class="btn btn-primary">Next &#187;</button>
         <div style="clear:both"></div>
     </div>
 }
 
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/jquerymask")
 }
+

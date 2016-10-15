@@ -1,6 +1,7 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="ai.0.22.19-build00125.min.js" />
 /// <reference path="bootstrap.js" />
+/// <reference path="checkboxtrue.js" />
 /// <reference path="jquery.maskedinput.min.js" />
 /// <reference path="jquery.validate.js" />
 /// <reference path="jquery.validate.unobtrusive.js" />

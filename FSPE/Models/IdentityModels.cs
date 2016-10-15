@@ -29,6 +29,7 @@ namespace FSPE.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
 
         public static ApplicationDbContext Create()

@@ -42,11 +42,22 @@ namespace FSPE.Models
         public int ClubId { get; set; }
 
         public DateTime RegistrationDate { get; set; }
+        [Display(Name = "I Agree")]
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to the terms.")]
+        public bool ElectronicSignature { get; set; }
         public bool IsPaid { get; set; }
         public string CouponCode { get; set; }
         
         public ChildDisposition ChildDisposition { get; set; }
         [Display(Name = "How will your child leave Club Activities?")]
         public int ChildDispositionId { get; set; }
+    }
+
+    public class MustBeTrueAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            return value is bool && (bool)value;
+        }
     }
 }

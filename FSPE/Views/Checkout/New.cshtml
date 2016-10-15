@@ -16,7 +16,7 @@
     }
 
     .bt-drop-in-wrapper {
-        width: 500px;
+        width: 100%;
         border: 1px solid gray;
         padding: 10px;
         border-radius: 15px;
@@ -55,13 +55,14 @@
         <br />
         <p>If you were given a coupon code, please enter it below.</p>
         <form method="post" action="/checkout/coupon">
-            <br />
-            <label for="couponCode">
-                Coupon Code:
-                <input type="text" name="couponCode" value="" />
-            </label>
+            <div class="form-group">
+                <label for="couponCode">
+                    Coupon Code:
+                    <input type="text" name="couponCode" value="" />
+                </label>
+                <button class="btn btn-default" type="submit"><span>Apply Coupon</span></button>
+            </div>
 
-            <button class="btn btn-default" type="submit"><span>Apply Coupon</span></button>
         </form>
     </div>
 </div>

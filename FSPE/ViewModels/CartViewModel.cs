@@ -10,5 +10,6 @@ namespace FSPE.ViewModels
     {
         public ClubRegistration registration { get; set; }
         public Club club { get; set; }
+        public ChildDisposition childdisposition { get; set; }
     }
 }
