@@ -87,7 +87,14 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.ClubRegistration.Grade)
-                @Html.TextBoxFor(m => m.ClubRegistration.Grade, new { @class = "form-control" })
+                @Html.DropDownListFor(m => m.ClubRegistration.Grade, new List<SelectListItem> {
+                       new SelectListItem { Value = "K" , Text = "K" },
+                       new SelectListItem { Value = "1st" , Text = "1st" },
+                       new SelectListItem { Value = "2nd" , Text = "2nd" },
+                       new SelectListItem { Value = "3rd" , Text = "3rd" },
+                       new SelectListItem { Value = "4th" , Text = "4th" },
+                       new SelectListItem { Value = "5th" , Text = "5th" }
+                    }, "Select Grade", new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.ClubRegistration.Grade)
             </div>
             <div class="form-group">

@@ -1,9 +1,11 @@
 ﻿using Braintree;
 using FSPE.Models;
 using FSPE.ViewModels;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -90,12 +92,17 @@ namespace FSPE.Controllers
             var clubRegistrations = _context.ClubRegistrations.Where(cr => cr.RegistrationKey == registrationKey);
             var clubs = _context.Clubs.ToList();
 
-            var total = (from cr in clubRegistrations
+            var order = (from cr in clubRegistrations
                          join c in _context.Clubs on cr.ClubId equals c.Id
                          select new
                          {
+                             c.Name,
+                             c.Days,
+                             cr.ChildName,
                              c.Price
-                         }).Sum(s => s.Price);
+                         });
+            
+            var total = order.Sum(s => s.Price);
 
             try
             {
@@ -124,6 +131,22 @@ namespace FSPE.Controllers
             if (result.IsSuccess())
             {
                 Transaction transaction = result.Target;
+
+                var bodyText = "";
+                try
+                {
+                    var parentName = clubRegistrations.First().ParentName;
+                    var parentEmail = clubRegistrations.First().EmailAddress;
+                    foreach (var line in order)
+                    {
+                        bodyText += "<tr class=\"item\"><td>";
+                        bodyText += line.Name + " - " + line.Days + "</td><td style=\"vertical-align: top;text-align: right;padding: 5px 5px 20px;\">";
+                        bodyText += "$" + line.Price + "</td></tr>";
+                    }
+                    SendOrderConfirmationEmail(bodyText, total,parentEmail, parentName, transaction.Id);
+                }
+                catch { }
+
                 return RedirectToAction("Show", new { id = transaction.Id });
             }
             else if (result.Transaction != null)
@@ -144,6 +167,54 @@ namespace FSPE.Controllers
             }
 
             
+
+        }
+
+        public ActionResult SendMail()
+        {
+            var bodyText = "<tr class=\"item\"><td>Running - Monday</td><td style=\"vertical-align: top;text-align: right;padding: 5px 5px 20px;\">$5.00</td></tr>";
+            var total = 5.00d;
+          
+            var result = SendOrderConfirmationEmail(bodyText, total, "jeff2k7z@gmail.com", "Jeff Bolton", "8675309");
+            var status = result.Result;
+            result.Wait();
+
+            TempData["header"] = "Sweet Success!";
+            TempData["icon"] = "success";
+            TempData["message"] = status;
+
+
+
+            return View("~/Views/Checkout/Show.cshtml");
+        }
+
+        private async Task<string> SendOrderConfirmationEmail(string bodyText, double total, string emailAddress, string name, string invoiceNumber)
+        {
+            var apiKey = "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";
+            dynamic sg = new SendGrid.SendGridAPIClient(apiKey, "https://api.sendgrid.com");
+
+            Email from = new Email("darlene.m.strickland@gmail.com");
+            String subject = "Your Receipt from FOSPE";
+            Email to = new Email(emailAddress);
+            Content content = new Content("text/html", bodyText);
+            Mail mail = new Mail(from, subject, to, content);
+            //Email email = new Email("jeff2k7z@gmail.com");
+            //mail.Personalization[0].AddBcc(email);
+
+            mail.TemplateId = "22f3fd07-7217-457f-99b3-b97f8df2854e";
+            //mail.TemplateId = "4b6509b8-c28c-4736-b071-4958d1f775cc";
+            mail.Personalization[0].AddSubstitution("-total-", total.ToString("$####.00"));
+            mail.Personalization[0].AddSubstitution("-recipient-", emailAddress);
+            mail.Personalization[0].AddSubstitution("-name-", name);
+            mail.Personalization[0].AddSubstitution("-createddate-", DateTime.Now.AddHours(-4).ToString("MM/dd/yyyy"));
+            mail.Personalization[0].AddSubstitution("-invoicenumber-", invoiceNumber);
+
+            dynamic response = await sg.client.mail.send.post(requestBody: mail.Get());
+            Console.WriteLine(response.StatusCode);
+            Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+            Console.WriteLine(response.Headers.ToString());
+
+            return response.StatusCode.ToString();
 
         }
 
@@ -184,8 +255,8 @@ namespace FSPE.Controllers
             {
                 TempData["header"] = "There was a problem processing your payment.";
                 TempData["icon"] = "fail";
-                TempData["message"] = "Your test transaction has a status of " + transaction.Status + ". See the Braintree API response and try again.";
-                //TempData["message"] = "Please try again.";
+                //TempData["message"] = "Your test transaction has a status of " + transaction.Status + ". See the Braintree API response and try again.";
+                TempData["message"] = "Please try again.";
             };
 
             ViewBag.Transaction = transaction;

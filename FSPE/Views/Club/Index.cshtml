@@ -179,10 +179,10 @@
 }
 else
 {
-    if (DateTime.Now > new DateTime(2016, 8, 22, 11, 0, 0))
+    if (DateTime.Now < new DateTime(2016, 10, 16, 18, 0, 0))
     {
-        <p style="font-size: 18px;">Registration is <b>NOT</b> currently open. We will begin taking signups <b style="font-size:20px;">Second Quarter</b>.  Please check back then.</p>
-        <p>Please review the 2016 Quarter 1 clubs below.</p>
+        <p style="font-size: 18px;">Registration is <b>NOT</b> currently open. We will begin taking signups <b style="font-size:20px;">Sunday, October 16th at 2pm EST</b>.  Please check back then.</p>
+        <p>Please review the 2016 Quarter 2 clubs below.</p>
     }
     else
     {
@@ -222,7 +222,7 @@ else
     }
     </div>
 
-    if (DateTime.Now < new DateTime(2016, 8, 22, 11, 0, 0))
+    if (DateTime.Now > new DateTime(2016, 10, 16, 18, 0, 0))
     {
     <br />
         using (Html.BeginForm("NewRegistration", "Club", FormMethod.Post, new { id = "registrationform" }))
