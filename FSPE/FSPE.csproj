@@ -304,7 +304,6 @@
     <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="ApplicationInsights.config" />
     <None Include="Properties\PublishProfiles\fospe-dev.pubxml" />
     <None Include="Properties\PublishProfiles\FSPE-DEV.pubxml" />
     <None Include="Properties\PublishProfiles\FSPE.pubxml" />
