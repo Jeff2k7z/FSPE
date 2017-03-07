@@ -99,7 +99,7 @@
         .group {
             float: left;
             border: 1px solid #808080;
-            width: calc(100% / 5);
+            width: calc(100% / 4);
             text-align: center;
         }
 
@@ -179,10 +179,10 @@
 }
 else
 {
-    if (DateTime.Now > new DateTime(2017, 1, 14, 22, 0, 0))
+    if (DateTime.Now < new DateTime(2017, 3, 11, 22, 0, 0))
     {
-        <p style="font-size: 18px;">Registration is <b>NOT</b> currently open. We will begin taking signups in <b style="font-size:20px;">Quarter 4</b>.  Please check back then.</p>
-        <p>Please review the 2016-2017 Quarter 3 clubs below.</p>
+        <p style="font-size: 18px;">Registration is <b>NOT</b> currently open. We will begin taking signups onn <b style="font-size:20px;">March 11th at 5pm</b>.  Please check back then.</p>
+        <p>Please review the 2016-2017 Quarter 4 clubs below.</p>
     }
     else
     {
@@ -222,7 +222,7 @@ else
     }
     </div>
 
-    if (DateTime.Now < new DateTime(2016, 10, 16, 18, 0, 0))
+    if (DateTime.Now > new DateTime(2076, 3, 11, 22, 0, 0))
     {
     <br />
         using (Html.BeginForm("NewRegistration", "Club", FormMethod.Post, new { id = "registrationform" }))
