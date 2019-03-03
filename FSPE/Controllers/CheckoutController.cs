@@ -59,7 +59,7 @@ namespace FSPE.Controllers
                          }).Sum(s => s.Price);
 
             var gateway = config.GetGateway();
-            var clientToken = gateway.ClientToken.generate();
+            var clientToken = gateway.ClientToken.Generate();
             ViewBag.ClientToken = clientToken;
 
             var viewModel = new PaymentViewModel
